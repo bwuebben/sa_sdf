@@ -73,11 +73,12 @@ class SASDF(nn.Module):
         self.temporal_ssm = TemporalStateModule(num_chars, num_state_tokens=num_state_tokens)
         
         # 2. Transformer Encoder (Pre-LN) [cite: 1379]
-        encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead, 
-                                                   dim_feedforward=4*d_model, 
-                                                   dropout=0.1, activation='gelu', 
+        encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=nhead,
+                                                   dim_feedforward=4*d_model,
+                                                   dropout=0.1, activation='gelu',
                                                    batch_first=True, norm_first=True)
-        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers,
+                                                 enable_nested_tensor=False)
         
         # 3. Portfolio Layer (Readout) [cite: 224]
         self.readout = nn.Linear(d_model, 1, bias=False)
